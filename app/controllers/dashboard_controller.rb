@@ -11,12 +11,18 @@ class DashboardController < ApplicationController
 
   def show
     redirect_to dashboard_path if @user.nil?
+    
+    @links = @user.links.where.not(url: '', title: '')
   end
 
   private
 
   def set_user
     # localhost:3000/1
-    @user = User.find_by_id(params[:id])
+    begin
+      @user = User.friendly.find(params[:id])
+    rescue StandardError
+      @user = nil
+    end
   end
 end
